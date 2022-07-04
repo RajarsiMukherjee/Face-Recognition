@@ -19,7 +19,7 @@
 
 Rajarsi Mukherjee - [My Linkedin]( )
 
-Project Link - [Project Repo]( )
+Project Link - [Project Repo](https://github.com/RajarsiMukherjee/Face-Recognition)
 
 Project Deployed Link - [Project Deployed Link](https://face-check.vercel.app)
 
