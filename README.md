@@ -17,7 +17,7 @@
 
 ## Contact
 
-Pranav Dalvi - [My Linkedin]( )
+Rajarsi Mukherjee - [My Linkedin]( )
 
 Project Link - [Project Repo]( )
 
