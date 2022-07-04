@@ -17,7 +17,7 @@
 
 ## Contact
 
-Rajarsi Mukherjee - [My Linkedin](www.linkedin.com/in/rajarsi-mukherjee-11035119b)
+Rajarsi Mukherjee - [My Linkedin](https://www.linkedin.com/in/rajarsi-mukherjee-11035119b/)
 
 Project Link - [Project Repo](https://github.com/RajarsiMukherjee/Face-Recognition)
 
