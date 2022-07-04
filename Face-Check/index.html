@@ -1,0 +1,247 @@
+<html>
+  <head>
+    <title>Face Recognize Pranav Dalvi</title>
+    <meta
+      name="mphtools-feature"
+      content="compatibilityUI, cameraPrivacyPopup, compatibilityAutoCheck"
+    />
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <div><b>Results</b></div>
+
+    <div class="mainDiv">
+      <div class="mainDiv1" id="mainDivCamera">
+        <div id="CamCenterDiv"></div>
+        <div>
+          <!-- <iframe src="./viedos/one.mp4" id="videoId" frameborder="0" allow="autoplay"></iframe> -->
+          <!-- <video id="videoId" autoplay width="200px" height="290px">
+            <source src="./viedos/one.mp4" type="video/mp4"  >
+          </video> -->
+
+          <!-- <video src="./viedos//one.mp4" id="videoId" width="200px" height="290px" autoplay controls></video> -->
+        </div>
+        <!-- <div id="buttonsDiv">
+          <button>1</button>
+          <button>2</button>
+        </div> -->
+      </div>
+      <div class="mainDiv2">
+        <div class="aiScoring"><p>AI Scoring</p></div>
+        <div class="emotion">
+          <div><p>Emotions</p></div>
+        </div>
+
+        <div class="EmotionGraph">
+          <div class="emotionName"><p>Emotions</p></div>
+          <div class="EmotionsGraphLevel">
+            <div class="graphNames">
+              <div>Happy</div>
+              <div>Angry</div>
+              <div>Sad</div>
+              <div>Surprise</div>
+              <div>Fear</div>
+              <div>Disgust</div>
+              <div>Neutral</div>
+            </div>
+            <div class="graphIndicatorLevel">
+              <div
+                class="GraphLine"
+                id="happyLine"
+                style="background-color: green; height: 15px"
+              ></div>
+              <div
+                class="GraphLine"
+                id="angryLine"
+                style="background-color: red; height: 15px"
+              ></div>
+              <div
+                class="GraphLine"
+                id="sadLine"
+                style="background-color: orange; height: 15px"
+              ></div>
+              <div
+                class="GraphLine"
+                id="surpriseLine"
+                style="background-color: yellow; height: 15px"
+              ></div>
+              <div
+                class="GraphLine"
+                id="fearLine"
+                style="background-color: black; height: 15px"
+              ></div>
+              <div
+                class="GraphLine"
+                id="disgustLine"
+                style="background-color: gray; height: 15px"
+              ></div>
+              <div
+                class="GraphLine"
+                id="neutralLine"
+                style="background-color: rgb(69, 69, 225); height: 15px"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="affects">
+          <div>
+            <div class="affectName"><p>Arousal</p></div>
+            <div
+              class="affectLine"
+              id="arousalDiv"
+              style="background-color: green; width: 20px"
+            ></div>
+            <div class="affectNumLine">
+              <p>-1</p>
+              <p>0</p>
+              <p>+1</p>
+            </div>
+          </div>
+          <div>
+            <div class="affectName"><p>Valence</p></div>
+            <div
+              class="affectLine"
+              id="valenceDiv"
+              style="background-color: orange; width: 20px"
+            ></div>
+            <div class="affectNumLine">
+              <p>-1</p>
+              <p>0</p>
+              <p>+1</p>
+            </div>
+          </div>
+        </div>
+        <div class="attention">
+          <div><p>Attention</p></div>
+          <div
+            class="attentionLine"
+            id="attentionDiv"
+            style="height: 10px"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div></div>
+  </body>
+
+  <script src="https://sdk.morphcast.com/mphtools/v1.0/mphtools.js"></script>
+  <script src="https://ai-sdk.morphcast.com/v1.16/ai-sdk.js"></script>
+  <script>
+    
+    // const arr = [ "./one.mp4",
+    //   "https://static.videezy.com/system/resources/previews/000/035/639/original/business150.mp4",
+    //   "https://assets.mixkit.co/videos/preview/mixkit-girl-smiling-portrait-in-the-library-4756-large.mp4",
+    // ];
+    // const customSource = CY.createSource.fromVideoUrl(arr[0]);
+    // const customSource = CY.createSource.fromVideoElement(document.getElementById("videoId"));
+    CY.loader()
+      .licenseKey("7e3e816809075f04d24f2ab6da3a1eeb989e7cdea231")
+      // .source(customSource)
+      // .source(customSource)
+      .addModule(CY.modules().FACE_AGE.name)
+      .addModule(CY.modules().FACE_GENDER.name)
+      .addModule(CY.modules().FACE_EMOTION.name)
+      .addModule(CY.modules().FACE_AROUSAL_VALENCE.name, { smoothness: 0.7 })
+      .addModule(CY.modules().FACE_ATTENTION.name, { smoothness: 0.83 })
+      .load()
+      .then(({ start, stop }) => {
+        start();
+        setTimeout(stop, 2000);
+      });
+
+    const canvas = document.createElement("canvas");
+    // document.body.appendChild(canvas);
+    document.getElementById("CamCenterDiv").append(canvas);
+
+    window.addEventListener(CY.modules().CAMERA.eventName, (event) => {
+      // console.log("New frame in input");
+      const ctx = canvas.getContext("2d");
+      const imageData = event.detail;
+      ctx.canvas.width = imageData.width;
+      ctx.canvas.height = imageData.height;
+      ctx.putImageData(imageData, 0, 0);
+    });
+
+    window.addEventListener(CY.modules().FACE_EMOTION.eventName, (evt) => {
+      // console.log("Emotion result", evt.detail.output.emotion);
+
+      document.getElementById("happyLine").style.height = `${
+        evt.detail.output.emotion.Happy.toFixed(2) * 100
+      }px`;
+
+      document.getElementById("angryLine").style.height = `${
+        evt.detail.output.emotion.Angry.toFixed(2) * 100
+      }px`;
+
+      document.getElementById("sadLine").style.height = `${
+        evt.detail.output.emotion.Sad.toFixed(2) * 100
+      }px`;
+
+      document.getElementById("surpriseLine").style.height = `${
+        evt.detail.output.emotion.Surprise.toFixed(2) * 100
+      }px`;
+
+      document.getElementById("fearLine").style.height = `${
+        evt.detail.output.emotion.Fear.toFixed(2) * 100
+      }px`;
+
+      document.getElementById("disgustLine").style.height = `${
+        evt.detail.output.emotion.Disgust.toFixed(2) * 100
+      }px`;
+
+      document.getElementById("neutralLine").style.height = `${
+        evt.detail.output.emotion.Neutral.toFixed(2) * 100
+      }px`;
+    });
+
+    window.addEventListener(
+      CY.modules().FACE_AROUSAL_VALENCE.eventName,
+      (evt) => {
+        console.log("FACE_AROUSAL_VALENCE", {
+          arousal: evt.detail.output.arousal,
+          valence: evt.detail.output.valence,
+          affects38: {
+            Afraid: evt.detail.output.affects38.Afraid,
+            Amused: evt.detail.output.affects38.Amused,
+          },
+          affects98: {
+            Adventurous: evt.detail.output.affects98.Adventurous,
+            Afraid: evt.detail.output.affects98.Afraid,
+          },
+          quadrant: evt.detail.output.quadrant,
+        });
+        // console.log('Face arousal valence result', evt.detail.output);
+
+        const valenceCt = evt.detail.output.valence;
+        const arousalCt = evt.detail.output.arousal;
+        if (arousalCt > 0) {
+          var newArousal = arousalCt.toFixed(2) * 100 + 100;
+        } else {
+          var newArousal = arousalCt.toFixed(2) * -100;
+        }
+        // console.log("trial", newArousal);
+        document.getElementById("arousalDiv").style.width = `${newArousal}px`;
+
+        if (valenceCt > 0) {
+          var newValence = valenceCt.toFixed(2) * 100 + 100;
+        } else {
+          var newValence = valenceCt.toFixed(2) * -100;
+        }
+
+        document.getElementById("valenceDiv").style.width = `${newValence}px`;
+      }
+    );
+
+    window.addEventListener(CY.modules().FACE_ATTENTION.eventName, (evt) => {
+      // console.log("Face attention result", evt.detail.output.attention);
+
+      document.getElementById("attentionDiv").style.height = `${
+        evt.detail.output.attention.toFixed(2) * 100
+      }px`;
+    });
+  </script>
+</html>
+
+<!-- https://face-check.vercel.app -->
